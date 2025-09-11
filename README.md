@@ -134,3 +134,9 @@ Projeto-Pessoal-Gerador-de-Loteria-Python/
 Este projeto é pessoal e foi desenvolvido apenas para estudo e prática de programação em Python.
 Não possui vínculo com nenhuma loteria oficial.
 Você é livre para usar e modificar o código como quiser.
+
+## ✍️ Autor
+
+Desenvolvido por **Matheus Beiruth Miranda dos Santos**  
+💼 [www.linkedin.com/in/matheusbeiruth]  
+📧 [matheusbeiruth10@gmail.com]
