@@ -1,0 +1,13 @@
+quickpick:
+  pool_min: 1
+  pool_max: 60
+  numbers_per_ticket: 6
+
+weighted:
+  pool_min: 1
+  pool_max: 60
+  numbers_per_ticket: 6
+  weights:
+    7: 10.0   
+    13: 5.0
+    42: 3.0   

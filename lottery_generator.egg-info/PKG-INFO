@@ -1,0 +1,35 @@
+Metadata-Version: 2.4
+Name: lottery-generator
+Version: 0.1.0
+Summary: Gerador de apostas de loteria em Python, com estratégias configuráveis e filtros.
+Author-email: Matheus Beiruth Miranda dos Santos <matheusbeiruth10@gmail.com>
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: pyyaml>=6.0
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+
+# Gerador Profissional de Números para Loteria
+
+
+Projeto em Python com foco em clareza, testabilidade e boas práticas.
+
+
+### Recursos
+- RNG configurável: reproduzível via seed ou seguro via `secrets.SystemRandom`.
+- Estratégias modulares (QuickPick, Weighted).
+- Filtros encadeáveis (ex.: excluir números recentes).
+- CLI simples e testes com pytest.
+
+
+### Como usar
+1. Criar venv: `python -m venv .venv && source .venv/bin/activate`
+2. Instalar dependências de dev: `pip install pytest`
+3. Rodar: `python cli.py --count 5 --n 6 --secure`
+4. Testes: `pytest -q`
+
+
+### Observações
+- O gerador não promete vantagem estatística — loterias são eventos aleatórios.
+- Para uso em produção, documentar claramente que é apenas um gerador aleatório.
