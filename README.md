@@ -1,142 +1,99 @@
-# 🎲 Lottery Generator
+# Advanced Lottery Engine 🎲
 
-Um gerador de apostas de loteria em **Python**, flexível e modular.  
-Suporta **estratégias diferentes** (`QuickPick`, `Weighted`) e permite configuração via **config.yaml**.
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![Architecture](https://img.shields.io/badge/Design%20Pattern-Strategy-orange)
+![Security](https://img.shields.io/badge/RNG-Secure-green)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
----
+## 📋 Project Overview
+O **Advanced Lottery Engine** é uma solução de software projetada para a geração flexível e segura de combinações numéricas para sistemas de loteria. 
 
-## 🚀 Instalação
+Diferente de scripts simples de aleatoriedade, este projeto implementa uma arquitetura robusta baseada no **Strategy Design Pattern**, permitindo a injeção de diferentes algoritmos de seleção (como *QuickPick* padrão ou *Weighted Selection*) sem alterar o núcleo da aplicação. O sistema também suporta geração criptograficamente segura (CSPRNG) para garantir a imprevisibilidade dos resultados.
 
-Crie e ative um ambiente virtual:
+## 🏗️ Architecture & Design Patterns
 
+O projeto foi construído sobre princípios de **SOLID** e **Clean Code**:
+
+* **Strategy Pattern:** A lógica de geração de números é encapsulada em classes de estratégia (`QuickPickStrategy`, `WeightedStrategy`). O `LotteryGenerator` (Contexto) desconhece os detalhes da implementação, apenas solicita a geração.
+* **Dependency Injection:** A estratégia desejada é injetada no gerador em tempo de execução, baseada nos argumentos da CLI ou configuração YAML.
+* **Secure RNG:** Utilização do módulo `secrets` do Python para geração de entropia segura, essencial para aplicações que exigem auditoria e justiça.
+* **Configuration Management:** Separação entre código e configuração através de arquivos YAML, permitindo ajustes de pesos e regras sem *redeployment*.
+
+## 🛠️ Tech Stack
+* **Language:** Python 3.10+
+* **CLI Framework:** `argparse` (Standard Library)
+* **Configuration:** `PyYAML`
+* **Security:** `secrets` (Cryptographically secure random numbers)
+
+## 🚀 Installation
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/BeiruthDEV/advanced-lottery-engine.git](https://github.com/BeiruthDEV/advanced-lottery-engine.git)
+    cd advanced-lottery-engine
+    ```
+
+2.  **Configure o ambiente virtual:**
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # Windows: venv\Scripts\activate
+    pip install -r requirements.txt  # Ou: pip install -e .
+    ```
+
+## 💻 CLI Usage
+
+A ferramenta oferece uma interface de linha de comando robusta para integração com outros sistemas ou uso direto.
+
+### 1. Geração Padrão (QuickPick)
+Gera um jogo simples utilizando distribuição uniforme.
 ```bash
-python -m venv venv
-source venv/bin/activate
-venv\Scripts\activate      
+python cli.py generate --tickets 1
+# Output: Jogo 1: [5, 12, 23, 34, 45, 56]
 ```
 
+### 2. Geração Ponderada (Weighted Strategy)
+Utiliza pesos definidos no config.yaml para alterar a probabilidade de certos números (ex: baseada em estatísticas históricas).
 
-Instale as dependências em modo desenvolvimento:
-```bash
-pip install -e .
-```
-
-▶️ Uso via CLI
-
-Um jogo padrão (QuickPick)
-```bash
-python cli.py generate
-```
-📌 Saída de exemplo:
-```bash
-Jogo 1: [3, 8, 15, 22, 41, 56]
-```
-
-
-Cinco jogos
-```bash
-python cli.py generate --tickets 5
-```
-📌 Saída de exemplo:
-```bash
-Jogo 1: [4, 12, 27, 33, 41, 55]
-Jogo 2: [2, 9, 15, 28, 37, 44]
-Jogo 3: [1, 7, 18, 23, 36, 60]
-Jogo 4: [5, 14, 22, 31, 42, 59]
-Jogo 5: [6, 11, 20, 29, 34, 48]
-```
-
-Usando estratégia ponderada (definida no config.yaml)
 ```bash
 python cli.py generate --tickets 3 --strategy weighted
 ```
-📌 Saída de exemplo:
-```bash
-Jogo 1: [7, 10, 22, 33, 42, 51]
-Jogo 2: [3, 7, 13, 27, 38, 49]
-Jogo 3: [7, 14, 19, 28, 35, 42]
-```
-
-Com seed fixa (resultados reprodutíveis)
-```bash
-python cli.py generate --tickets 2 --seed demo
-```
-```bash
-Jogo 1: [3, 9, 21, 28, 34, 57]
-Jogo 2: [2, 8, 17, 26, 39, 44]
-```
-
-Usando gerador seguro (secrets)
-```bash
-python cli.py generate --tickets 2 --secure
-```
-📌 Saída de exemplo:
-```bash
-Jogo 1: [1, 7, 13, 25, 36, 48]
-Jogo 2: [5, 12, 20, 29, 37, 59]
-```
-
-▶️ Uso no Python (importando como biblioteca)
-```bash
-from generator.core import LotteryGenerator
-from generator.strategies import QuickPickStrategy
 
 
-s = QuickPickStrategy(pool_min=1, pool_max=60, numbers_per_ticket=6, seed="demo")
-gen = LotteryGenerator(s)
+### 3. Modo Seguro (Secure RNG)
+Força o uso de fontes de entropia do sistema operacional para garantir aleatoriedade criptográfica.
 
-print("Um jogo:", gen.generate_ticket())
-print("Cinco jogos:", gen.generate_multiple(5))
-```
-📌 Saída de exemplo:
 ```bash
-Um jogo: [5, 14, 23, 31, 42, 56]
-Cinco jogos: [
-  [2, 9, 15, 28, 37, 44],
-  [1, 7, 18, 23, 36, 60],
-  [4, 12, 27, 33, 41, 55],
-  [6, 11, 20, 29, 34, 48],
-  [3, 8, 16, 24, 39, 53]
-]
+python cli.py generate --tickets 5 --secure
+```
+
+### 4. Reproducibilidade (Seeding)
+Permite replicar resultados para fins de teste e depuração.
+
+```bash
+python cli.py generate --seed "audit-test-2025"
 ```
 
 
-🧪 Testes
+## ⚙️ Configuration (YAML)
+O comportamento do sistema é controlado via config.yaml:
+```bash
 
-Rodar todos os testes com:
-```bash
-pytest
-```
-Se tudo estiver certo, você verá:
-```bash
-========================== 4 passed in 0.05s ==========================
-```
-📂 Estrutura do Projeto
-```bash
-Projeto-Pessoal-Gerador-de-Loteria-Python/
-│── generator/
-│   ├── __init__.py
-│   ├── core.py
-│   ├── strategies.py
-│── tests/
-│   └── test_generator.py
-│── docs/
-│   ├── explicacao_codigo.md
-│   └── linha_a_linha.md
-│── cli.py
-│── config.yaml
-│── pyproject.toml
-│── README.md
+YAML
+
+quickpick:
+  pool_min: 1
+  pool_max: 60
+  numbers_per_ticket: 6
+
+weighted:
+  pool_min: 1
+  pool_max: 60
+  weights:
+    10: 2.5  # O número 10 tem 2.5x mais chance de aparecer
+    23: 0.5  # O número 23 tem metade da chance
 ```
 
-📜 Licença
+## 🧪 Extensibility
+Para adicionar uma nova lógica (ex: baseada em Sequência de Fibonacci), basta estender a classe base e injetá-la no core.py, sem necessidade de refatorar o código existente.
 
-Este projeto é pessoal e foi desenvolvido apenas para estudo e prática de programação em Python.
-Não possui vínculo com nenhuma loteria oficial.
-Você é livre para usar e modificar o código como quiser.
-
-## ✍️ Autor
-
-Desenvolvido por **Matheus Beiruth Miranda dos Santos**  
-💼 [www.linkedin.com/in/matheusbeiruth]  
-📧 [matheusbeiruth10@gmail.com]
+Desenvolvido por Matheus Beiruth.
